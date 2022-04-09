@@ -15,7 +15,7 @@ from datetime import datetime
 from itertools import cycle
 
 
-token = "ODg3NDI2MTEzNzEyODQwNzE1.Yk9Zig.ysUezgW9K0TccuJWrpgn5WBX2VY" #####$#
+token = "" #####$#
 bot = commands.Bot(command_prefix='.', bot=False)
 
 kissgifs = ['http://i.imgur.com/0D0Mijk.gif ', 'http://i.imgur.com/TNhivqs.gif', 'http://i.imgur.com/3wv088f.gif', 'http://i.imgur.com/7mkRzr1.gif', 'http://i.imgur.com/8fEyFHe.gif']
