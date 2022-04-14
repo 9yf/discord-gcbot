@@ -166,9 +166,7 @@ Fun
 					
 
 
-				elif args[0] == "!chamoyisback":
-					msg = await message.channel.send('https://cdn.discordapp.com/attachments/921103814260580384/947220387828203530/87926134-33C0-4519-B1F1-2A6E6AA33E1B.jpg', delete_after=2)
-
+				
 
 
 				elif args[0] == "!kiss":
@@ -191,9 +189,6 @@ Fun
 					server = linecache.getline('servers.txt', random.randint(1, 1600))
 					await message.channel.send(server)
 
-				elif args[0] == "!gore":
-					server = linecache.getline('gore.txt', random.randint(1, 15))
-					await message.channel.send(server, delete_after=5)
 
 				elif args[0] == "!hentai":
 					r = requests.get("https://nekos.life/api/v2/img/Random_hentai_gif")
